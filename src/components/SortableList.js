@@ -1,7 +1,7 @@
 // NPM
 import React from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
-import {StyleSheet, css} from 'aphrodite';
+import { StyleSheet, css } from 'aphrodite';
 import arrayMove from 'array-move';
 
 // Component
@@ -11,9 +11,10 @@ const SortableList = SortableContainer(({ images, handleDrop, removeFile}) => {
   return (
     <ul className={css(styles.DropZoneGrid)} onDrop={handleDrop}>
       {images.length && images.map((image, i) => {
-      let { lastModified } = image;
-      let src = window.URL.createObjectURL(image);
-      let many = images.length > 2 ? true : false;
+      let { lastModified } = image; // uses this as a unique key and id
+      let src = window.URL.createObjectURL(image); // creates src from image data 
+      // IMPORTANT: ^^^ this is mostly like why images are rerendering. src is being calculated each time, maybe decorate image object?
+      let many = images.length > 2 ? true : false; // determines the css (size) of dropzones
       return <SortableItem 
         index={i}
         image={image}

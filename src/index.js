@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 //NPM
 import {StyleSheet, css} from 'aphrodite';
-import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 
 //Component
@@ -15,7 +14,7 @@ export default class DragNDrop extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      submitted: false,
+      submitted: false, 
       cache: {},
       images: []
     }
@@ -28,7 +27,7 @@ export default class DragNDrop extends Component {
     window.addEventListener('dragover', this.handleDragOver);
     window.addEventListener('dragenter', this.handleDragEnter);
     window.addEventListener('dragleave', this.handleDragLeave);
-    window.addEventListener('drop', this.handleDrop);
+    window.addEventListener('drop', this.handleWindowDrop);
   }
 
   componentWillUnmount() {
@@ -38,35 +37,25 @@ export default class DragNDrop extends Component {
     window.removeEventListener('dragover', this.handleDragOver);
     window.removeEventListener('dragenter', this.handleDragEnter);
     window.removeEventListener('dragleave', this.handleDragLeave);
-    window.removeEventListener('drop', this.handleDrop);
+    window.removeEventListener('drop', this.handleWindowDrop);
   }
   
+  /**
+   * Window listeners necessary to detect user drag and drops
+   * @param { Event} e -- window events
+   */
   handleDrag = () => {
     return false;
   }
-
-  handleDrop = (e) => {
-    e.preventDefault();
-    let files = e.dataTransfer.files;
-    this.appendFile(files);
+  handleWindowDrop = (e) => {
+    e.preventDefault(); //prevents image from loading on the page
   }
 
   handleDragStart = (e) => {
-    // console.log("dragStart");
-    // e.dataTransfer.setData("text/plain", e.target.id);
-    // var img = new Image(); 
-    // img.src = e.target.src; 
-    // e.dataTransfer.setDragImage(img, 0, 0);
-
-    // this.setState({dragged: Number(e.target.id)}, () => {
-    //   console.log(this.state.dragged)
-    // });
-    // e.target.style.opacity = 0.5;
     return false;
   }
 
   handleDragEnd = (e) => {
-    // e.target.style.opacity = 1;
     return false;
   }
 
@@ -76,27 +65,29 @@ export default class DragNDrop extends Component {
   }
 
   handleDragEnter = (e) => {
-    // if (e.target.className === "DropZone") {
-    //   e.target.style.opacity = 0.6;
-    // }
     return false;
   }
 
   handleDragLeave = (e) => {
-    // if (e.target.className === "DropZone") {
-    //   ee.target.style.opacity = 1;
-    // }
     return false;
   }
-  
 
-  addGrid = () => {
-    this.setState({ grids:  [...this.state.grids, 1] }, () => {
-      let menu = document.getElementById("menu");
-      menu.scrollTop = menu.scrollHeight;
-    })
+  /**
+   * Handles localized image drops, function passed to children
+   * @param { Event } e -- event triggered from onDrop on children
+   */
+  handleDrop = (e) => {
+    e.preventDefault(); //prevents image from loading on the page
+    let files = e.dataTransfer.files;
+    this.appendFile(files);
   }
 
+  /**
+   * Checks to see if image added by user already exists.
+   * If image already exists, nothing will change
+   * If image doesn't exists, it will add the image's uid to the cache and add the image
+   * @param { Array } fileList -- array that contains image object
+   */
   appendFile = (fileList) => {
     let cache = { ...this.state.cache },
         newImages = [],
@@ -111,7 +102,11 @@ export default class DragNDrop extends Component {
     let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
     this.setState({ images, cache, submitted: false })
   }
-
+  
+  /**
+   * Removes the images and removes the image's uid from the cache
+   * @param { String } uid-- unique identifier of image
+   */
   removeFile = (uid) => {
     let cache = [ ...this.state.cache ];
     let images = [ ...this.state.images ];
@@ -123,13 +118,19 @@ export default class DragNDrop extends Component {
     this.setState({ images, cache })
   }
 
-
+  /**
+   * Needed to allow react-sortable-hoc's dragndrop feature to work
+   */
   onSortEnd = ({oldIndex, newIndex}) => {
     this.setState(({images}) => ({
       images: arrayMove(images, oldIndex, newIndex),
     }));
   }
 
+  /**
+   * Submits Data through a post request and changes the app's submitted state
+   * @param { Event } e -- event triggered by onClick
+   */
   submitData = (e) => {
     this.setState({ submitted: !this.state.submitted })
     // let path = 'EXAMPLE'
@@ -148,7 +149,6 @@ export default class DragNDrop extends Component {
 
     return (
       <div className={css(styles.Body)}>
-        <h2>Drag and Drop Images</h2>
         <div className={css(styles.DropzoneContainer)} id="container">
           {submitted 
           ? <FinishedScreen images={images} />
@@ -157,7 +157,7 @@ export default class DragNDrop extends Component {
             : <DropZoneHero images={images} id={0} appendFile={this.appendFile} removeFile={this.removeFile} /> )
           }
           <div className={css(styles.DropzoneButtons)} >
-            <DropzoneButton addGrid={this.addGrid} appendFile={this.appendFile}/>
+            <DropzoneButton appendFile={this.appendFile}/>
             <button className={css(styles.button)} onClick={this.submitData}>
               {submitted ? "Return" : "Finished"}
             </button>
@@ -174,7 +174,7 @@ let styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
   },
   DropzoneContainer: {
     display: "flex",
@@ -186,7 +186,7 @@ let styles = StyleSheet.create({
     height: 400,
     width: 700,
     overflow: "hidden",
-    boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
+    boxShadow: 'rgba(129,148,167,0.39) 0px 0px 2px 0px',
     "::-webkit-scrollbar": { 
       display: "none"
     }

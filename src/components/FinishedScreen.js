@@ -1,6 +1,6 @@
 //NPM
 import React from 'react';
-import {StyleSheet, css} from 'aphrodite';
+import { StyleSheet, css } from 'aphrodite';
 
 //Component
 import FinishedScreenPreview from './FinishedScreenPreview';
@@ -8,10 +8,10 @@ import FinishedScreenPreview from './FinishedScreenPreview';
 const FinishedScreen = ({ images }) => {
   return (
     <div className={css(styles.FinishedScreen)}>
-      <h1 className={css(styles.Text)}>Successfully Submitted</h1><br></br><br></br>
+      <h1 className={css(styles.Text)}>Successfully Submitted</h1>
       <div className={css(styles.ImageReview)}>
         {images.map((image, index) => {
-          let src = window.URL.createObjectURL(image);
+          let src = window.URL.createObjectURL(image); //creates src from image object
           return <FinishedScreenPreview src={src} key={index} />
         })}
       </div>
@@ -27,7 +27,9 @@ let styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignContent: "center",
-    overflowX: "scroll"
+    overflowX: "scroll",
+    overflowY: "hidden",
+    paddingBottom: 5
   },
   Text: {
     margin: "auto",
@@ -38,7 +40,8 @@ let styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     height: "70%",
-    overflowX: "scroll"
+    overflowX: "scroll",
+    overflowY: "hidden",
   }
 })
 

@@ -1,25 +1,39 @@
+//NPM
 import React from 'react';
-
-import {StyleSheet, css} from 'aphrodite';
+import { StyleSheet, css } from 'aphrodite';
 
 export default class DropZoneButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      switch: true
+      switch: true //leaving possibility for user to delete image when dropped
     }
   }
 
+  /**
+   * Allows user to add image that are dragged on top of button 
+   * @param { Event } e -- allows data from image to be saved onDrop
+   * @function { appendFile } -- function on parent that adds the file to cache and to image array
+   */
   handleDrop = (e) => {
     let files = e.dataTransfer.files;
     this.props.appendFile(files);
   }
 
+  /**
+   * Allows user to access the file input
+   * @param { Event } e -- triggers synthetic event onClick
+   */
   promptImageUpload = (e) => {
     let input = document.getElementById('input');
     input.click();
   }
 
+  /**
+   * Allows images that selected in input window to be saved
+   * @param { Event } e -- the file/files chosen by the user onChange
+   * @function { appendFile } -- function on parent that adds the file to cache and to image array
+   */
   handleInputChange = (e) => {
     let fileList = e.target.files;
     this.props.appendFile(fileList);

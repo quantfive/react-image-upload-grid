@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
-
 //NPM
-import {StyleSheet, css} from 'aphrodite';
-
+import React, { Component } from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
 export default class DropZoneHero extends Component {
   constructor(props) {
@@ -13,6 +11,12 @@ export default class DropZoneHero extends Component {
     }
   }
 
+  /**
+   * Allows user to add image that are dragged on top of button 
+   * @param { Event } e -- allows data from image to be saved onDrop
+   * @function { displayPreviw } -- allows the image preview to be shown on the component
+   * @function { appendFile } -- function on parent that adds the file to cache and to image array
+   */
   handleDrop = (e) => {
     e.preventDefault();
     e.persist();
@@ -31,18 +35,30 @@ export default class DropZoneHero extends Component {
     })
   }
 
+  /**
+   * Reveals button that allows user to delete image
+   * @param { Event } e -- triggered by MouseOver event
+   */
   handleMouseOver = (e) => {
     this.setState({
       showButton: true
     })
   }
 
+  /**
+   * Hides button that allows user to delete image
+   * @param { Event } e -- triggered by MouseLeave event
+   */
   handleMouseLeave = (e) => {
     this.setState({
       showButton: false
     })
   }
 
+  /**
+   * Allows user to delete image
+   * @param { String } uid -- unique id passed by IIFE triggered onClick
+   */
   handleClick = (uid) => {
     this.props.removeFile(uid)
   }
@@ -53,7 +69,7 @@ export default class DropZoneHero extends Component {
     let src = images.length ? window.URL.createObjectURL(images[0]) : null;
 
     return (
-      <div className={css(styles.DropZoneGrid)}>
+      <div className={css(styles.DropZoneGrid)} onDrop={this.handleDrop}>
         <div 
           className={css(styles.DropZoneHero)}
           id={id}

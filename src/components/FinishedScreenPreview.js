@@ -1,48 +1,23 @@
-import React, { Component } from 'react';
-
 //NPM
-import {StyleSheet, css} from 'aphrodite';
+import React, { Component } from 'react';
+import { StyleSheet, css } from 'aphrodite';
 
-export default class DropZone extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
+const FinishedScreenPreview = ({ src }) => {
 
-  // handleDrop = (e) => {
-  //   e.preventDefault();
-  //   let files = e.dataTransfer.files;
-  //   let src = window.URL.createObjectURL(files[0]);
-  //   this.displayPreview(e, src);
-  //   this.props.appendFile(files);
-  // }
-
-  // displayPreview = (e, src) => {
-  //   let img = document.getElementById(e.target.id);
-  //   img.src = src;
-  // }
-  
-  // handleClick = (e) => {
-  //   this.props.removeFile(e.target.id)
-  // }
-
-  render() {
-    let { src } = this.props;
-    return (
-      <div className={css(styles.PreviewCard)}>
-        <img className={css(styles.preview)} src={src} />
-      </div>
-    )
-  }
+  return (
+    <div className={css(styles.PreviewCard)}>
+      <img className={css(styles.preview)} src={src} />
+    </div>
+  )
 }
-
+  
 let styles = StyleSheet.create({
   PreviewCard: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     minWidth: 150,
-    minHeight: 170,
+    minHeight: 150,
     overflow: "hidden",
     margin: 10,
     color: "black",
@@ -66,3 +41,5 @@ let styles = StyleSheet.create({
     overflow: "hidden"
   }
 });
+
+export default FinishedScreenPreview;

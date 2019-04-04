@@ -1,29 +1,29 @@
 //NPM
 import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
-import {StyleSheet, css} from 'aphrodite';
-
+import { StyleSheet, css } from 'aphrodite';
 
 const SortableItem = class SortableElement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      focusID: '',
-      showDiv: false,
+      focusID: '',  //saves id from events to specify changes
+      showDiv: false, //when true, shows button that allows user to remove image
     }
   }
 
+  /**
+   * Deletes image
+   * @param { String } uid -- unique id passed by IIFE triggered onClick
+   */
   handleClick = (uid) => {
     this.props.removeFile(uid)
   }
 
-  handleDragStart = (e) => {
-    this.setState({
-      focusID: '',
-      showDiv: false
-    })
-  }
-
+  /**
+   * Reveals button that allows user to delete image
+   * @param { Event} e -- event triggered by MouseOver
+   */
   handleMouseOver = (e) => {
     this.setState({
       focusID: e.target.id,
@@ -31,6 +31,10 @@ const SortableItem = class SortableElement extends React.Component {
     })
   }
 
+  /**
+   * Hides button that allows user to delete image
+   * @param { Event} e -- event triggerd by MouseLeave
+   */
   handleMouseLeave = (e) => {
     this.setState({
       focusId: '',
@@ -45,20 +49,19 @@ const SortableItem = class SortableElement extends React.Component {
       <li
       className={many ? `DropZone ${css(styles.DropZone)}` : `DropZone ${css(styles.DropZonePairs)}`}
       id={`dropzone${id}`}
-      draggable="true"
-      onDragStart={this.handleDragStart}
+      draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
       onDrop={handleDrop}
       onMouseEnter={this.handleMouseOver}
       onMouseLeave={this.handleMouseLeave}
       >
         <img 
-            draggable="false" 
+            draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
             onMouseEnter={this.handleMouseOver}
             className={css(styles.preview)} 
             id={id} 
             src={src} 
         />
-       {id === Number(this.state.focusID) && this.state.showDiv
+       {(id === Number(this.state.focusID) && this.state.showDiv)
           ? (<span className={css(styles.CloseButton)} onClick={() => this.handleClick(id)}>
               <p className={css(styles.ButtonText)}>-</p>
             </span>)
@@ -83,11 +86,9 @@ let styles = StyleSheet.create({
     textAlign: "center",
     cursor: "pointer",
     boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
-    border: "1px dashed #ccc",
     ":hover": {
       transform: "scale(1.03)",
       boxShadow: 'rgba(129,148,167,0.39) 0px 3px 20px 0px',
-      border: "1px dashed black",
     }
   },
   DropZonePairs: {
@@ -127,8 +128,8 @@ let styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 100,
-    top: 1,
-    right: 0.5,
+    top: 1.5,
+    right: 1.5,
     height: 18,
     width: 18,
     borderRadius: "50%",
