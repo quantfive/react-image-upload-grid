@@ -1,6 +1,10 @@
-//NPM
 import React, { Component } from 'react';
+
+// NPM Modules
 import { StyleSheet, css } from 'aphrodite';
+import Dropzone from 'react-dropzone'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class DropZoneHero extends Component {
   constructor(props) {
@@ -63,36 +67,48 @@ export default class DropZoneHero extends Component {
     this.props.removeFile(uid)
   }
 
+  /**
+   * When files are uploaded
+   * @param { Object } acceptedFiles -- the files we've accepted
+   */
+  onDrop = (acceptedFiles) => {
+    this.props.appendFile(acceptedFiles);
+
+    acceptedFiles.forEach(file => {
+      const reader = new FileReader()
+
+      reader.onabort = () => console.log('file reading was aborted')
+      reader.onerror = () => console.log('file reading has failed')
+      reader.onload = () => {
+        // Do whatever you want with the file contents
+        const blob = reader.result;
+  
+        this.props.saveBlob(blob);
+      }
+  
+      reader.readAsDataURL(file)
+    })
+  }
+
   render() {
     let { id, images } = this.props;
 
-    let src = images.length ? window.URL.createObjectURL(images[0]) : null;
-
     return (
-      <div className={css(styles.DropZoneGrid)} onDrop={this.handleDrop}>
-        <div 
-          className={css(styles.DropZoneHero)}
-          id={id}
-          draggable="true"
-          onMouseOver={this.handleMouseOver}
-          onMouseLeave={this.handleMouseLeave}
-          onDrop={this.handleDrop}>
-        {images.length
-          ? <img 
-              draggable="false" 
-              className={css(styles.preview)} 
-              id={`image.${id}`} 
-              src={src} 
-            />
-          : 'Drag & drop to get started!'
-        }
-        {(this.state.showButton && images.length) 
-          ? <span className={css(styles.CloseButton)} onClick={() => this.handleClick(id)}>
-              <p className={css(styles.ButtonText)}>-</p>
-            </span>
-          : null }
-        </div>
-      </div>
+      <Dropzone
+        onDrop={this.onDrop}
+        className={css(styles.DropZoneGrid)}>
+        {({getRootProps, getInputProps}) => {
+          return (
+            <div 
+              className={css(styles.DropZoneHero) + ' ' + this.props.dropzoneClassName}
+              {...getRootProps()}
+              >
+              <input {...getInputProps()} />
+              { this.props.addText ? this.props.addText : <FontAwesomeIcon icon={faPlus} size={'2x'} /> }
+            </div>
+          )
+        }}
+      </Dropzone>
     )
   }
 }
@@ -102,16 +118,18 @@ let styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    width: 300,
-    height: 300,
+    width: 180,
+    height: 180,
     overflow: "hidden",
     margin: 10,
+    outline: 'none',
     fontFamily: "Helvetica",
     color: "black",
     lineHeight: 1.5,
     textAlign: "center",
+    alignItems: 'center',
     cursor: "pointer",
-    boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
+    // boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     border: "2px dashed #ccc",
     ":hover": {
       transform: "scale(1.03)",
@@ -119,13 +137,9 @@ let styles = StyleSheet.create({
     },
   },
   preview: {
-    objectFit: "cover",
+    objectFit: "contain",
     width: "auto",
     height: "auto",
-    minWidth: "100%",
-    maxWidth: "100%",
-    minHeight: "100%",
-    maxHeight: "100%",
     float: "left",
     overflow: "hidden"
   },
@@ -135,7 +149,7 @@ let styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
-    width: "80%",
+    width: "100%",
     height: 400,
     overflowY: "scroll",
   },

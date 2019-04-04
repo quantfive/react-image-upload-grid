@@ -1,6 +1,7 @@
 //NPM
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import {useDropzone} from 'react-dropzone'
 
 export default class DropZoneButton extends React.Component {
   constructor(props) {
@@ -40,16 +41,22 @@ export default class DropZoneButton extends React.Component {
   }
 
   render() {
+    const {getRootProps, getInputProps} = useDropzone()
     return (
       <div 
         className={css(styles.buttonWrapper)} 
         onClick={this.promptImageUpload} 
-        onDrop={this.handleDrop}
+        {...getRootProps()}
         >
-        <input className={css(styles.input)} id="input" type="file" multiple accept="image/*" onChange={this.handleInputChange}/>
-          <div className={css(styles.button)}>
-            <p className={css(styles.plus)}>{this.state.switch ? "+" : "-"}</p>
-          </div>
+        <input className={css(styles.input)}
+          type="file"
+          multiple
+          accept="image/*" 
+          {...getInputProps()}
+        />
+        <div className={css(styles.button)}>
+          <p className={css(styles.plus)}>+</p>
+        </div>
       </div>
     )
   }

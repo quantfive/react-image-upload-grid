@@ -2,6 +2,7 @@
 import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
+import Dropzone from 'react-dropzone'
 
 const SortableItem = class SortableElement extends React.Component {
   constructor(props) {
@@ -14,9 +15,11 @@ const SortableItem = class SortableElement extends React.Component {
 
   /**
    * Deletes image
+   * @param { Event } e -- the onClick event
    * @param { String } uid -- unique id passed by IIFE triggered onClick
    */
-  handleClick = (uid) => {
+  handleClick = (e, uid) => {
+    e.stopPropagation();
     this.props.removeFile(uid)
   }
 
@@ -46,23 +49,47 @@ const SortableItem = class SortableElement extends React.Component {
   render() {
     let { src, id, many, handleDrop } = this.props;
     return (
+      // <Dropzone onDrop={this.onDrop} className={css(styles.DropZoneGrid)}>
+      //   {({getRootProps, getInputProps}) => {
+      //     return (
+      //       <li
+      //         className={`DropZone ${css(styles.DropZone)}`}
+      //         id={`dropzone${id}`}
+      //         draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
+      //         onMouseEnter={this.handleMouseOver}
+      //         onMouseLeave={this.handleMouseLeave}
+      //         {...getRootProps()}
+      //         >
+      //         <input {...getInputProps()} />
+      //         <img 
+      //           draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
+      //           className={css(styles.preview)} 
+      //           id={id}
+      //           src={src} 
+      //         />
+      //       {(id === Number(this.state.focusID) && this.state.showDiv)
+      //           ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
+      //               <p className={css(styles.ButtonText)}>-</p>
+      //             </span>)
+      //           : null }
+      //       </li>
+      //     )
+      //   }}
+      // </Dropzone>
       <li
-      className={many ? `DropZone ${css(styles.DropZone)}` : `DropZone ${css(styles.DropZonePairs)}`}
-      id={`dropzone${id}`}
-      draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-      onDrop={handleDrop}
-      onMouseEnter={this.handleMouseOver}
-      onMouseLeave={this.handleMouseLeave}
-      >
+        className={`DropZone ${css(styles.DropZone)}`}
+        id={`dropzone${id}`}
+        onMouseEnter={this.handleMouseOver}
+        onMouseLeave={this.handleMouseLeave}
+        >
         <img 
-            draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-            onMouseEnter={this.handleMouseOver}
-            className={css(styles.preview)} 
-            id={id} 
-            src={src} 
+          draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
+          className={css(styles.preview)} 
+          id={id}
+          src={src} 
         />
-       {(id === Number(this.state.focusID) && this.state.showDiv)
-          ? (<span className={css(styles.CloseButton)} onClick={() => this.handleClick(id)}>
+      {(id === Number(this.state.focusID) && this.state.showDiv)
+          ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
               <p className={css(styles.ButtonText)}>-</p>
             </span>)
           : null }
@@ -77,7 +104,7 @@ let styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    width: 142,
+    width: 180,
     height: 180,
     overflow: "hidden",
     margin: 10,
@@ -85,39 +112,22 @@ let styles = StyleSheet.create({
     lineHeight: 1.5,
     textAlign: "center",
     cursor: "pointer",
-    boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
+    borderRadius: 4,
+    outline: 'none',
+    cursor: 'pointer',
+    border: '1px solid #ddd',
+    // boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
     ":hover": {
       transform: "scale(1.03)",
-      boxShadow: 'rgba(129,148,167,0.39) 0px 3px 20px 0px',
-    }
-  },
-  DropZonePairs: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    width: 200,
-    height: 320,
-    overflow: "hidden",
-    margin: 10,
-    color: "black",
-    lineHeight: 1.5,
-    textAlign: "center",
-    cursor: "pointer",
-    boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
-    border: "1px dashed #ccc",
-    ":hover": {
-      transform: "scale(1.03)",
-      border: "1px dashed black",
+      boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     }
   },
   preview: {
-    objectFit: "cover",
+    objectFit: "contain",
     width: "auto",
     height: "auto",
     minWidth: "100%",
     maxWidth: "100%",
-    minHeight: "102%",
-    maxHeight: "102%",
     float: "left",
     overflow: "hidden"
   },
@@ -128,8 +138,8 @@ let styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 100,
-    top: 1.5,
-    right: 1.5,
+    top: 6,
+    right: 6,
     height: 18,
     width: 18,
     borderRadius: "50%",

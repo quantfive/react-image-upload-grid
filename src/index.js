@@ -16,60 +16,9 @@ export default class DragNDrop extends Component {
     this.state = {
       submitted: false, 
       cache: {},
-      images: []
+      images: [],
+      blobs: [],
     }
-  }
-  
-  componentDidMount() {
-    window.addEventListener('drag', this.handleDrag);
-    window.addEventListener('dragstart', this.handleDragStart);
-    window.addEventListener('dragend', this.handleDragEnd);
-    window.addEventListener('dragover', this.handleDragOver);
-    window.addEventListener('dragenter', this.handleDragEnter);
-    window.addEventListener('dragleave', this.handleDragLeave);
-    window.addEventListener('drop', this.handleWindowDrop);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('drag', this.handleDrag);
-    window.removeEventListener('dragstart', this.handleDragStart);
-    window.removeEventListener('dragend', this.handleDragEnd);
-    window.removeEventListener('dragover', this.handleDragOver);
-    window.removeEventListener('dragenter', this.handleDragEnter);
-    window.removeEventListener('dragleave', this.handleDragLeave);
-    window.removeEventListener('drop', this.handleWindowDrop);
-  }
-  
-  /**
-   * Window listeners necessary to detect user drag and drops
-   * @param { Event} e -- window events
-   */
-  handleDrag = () => {
-    return false;
-  }
-  handleWindowDrop = (e) => {
-    e.preventDefault(); //prevents image from loading on the page
-  }
-
-  handleDragStart = (e) => {
-    return false;
-  }
-
-  handleDragEnd = (e) => {
-    return false;
-  }
-
-  handleDragOver = (e) => {
-    e.preventDefault();
-    return false;
-  }
-
-  handleDragEnter = (e) => {
-    return false;
-  }
-
-  handleDragLeave = (e) => {
-    return false;
   }
 
   /**
@@ -102,6 +51,19 @@ export default class DragNDrop extends Component {
     let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
     this.setState({ images, cache, submitted: false })
   }
+
+  /**
+   * Saves the blob to the state so we can access it later
+   * @param { Object } blob -- the blob we wish to save to state
+   */
+  saveBlob = (blob) => {
+    let blobs = [...this.state.blobs];
+    blobs.push(blob);
+
+    this.setState({
+      blobs,
+    })
+  }
   
   /**
    * Removes the images and removes the image's uid from the cache
@@ -131,17 +93,14 @@ export default class DragNDrop extends Component {
    * Submits Data through a post request and changes the app's submitted state
    * @param { Event } e -- event triggered by onClick
    */
-  submitData = (e) => {
-    this.setState({ submitted: !this.state.submitted })
-    // let path = 'EXAMPLE'
-    // fetch(path, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(this.state.images),
-    // })
-    // .then(() => {
-    //   this.setState({ submitted: true })
-    // })
+  submitData = async (e) => {
+    this.setState({ submitted: !this.state.submitted });
+
+    await this.props.submitData && this.props.submitData();
+
+    this.setState({
+      submitted: true,
+    });
   }
 
   render() {
@@ -150,18 +109,29 @@ export default class DragNDrop extends Component {
     return (
       <div className={css(styles.Body)}>
         <div className={css(styles.DropzoneContainer)} id="container">
-          {submitted 
+          {/* {submitted 
           ? <FinishedScreen images={images} />
-          : (images.length > 1
-            ? <SortableList images={images} axis={"xy"} pressDelay={150} onSortEnd={this.onSortEnd} removeFile={this.removeFile} handleDrop={this.handleDrop}/> 
-            : <DropZoneHero images={images} id={0} appendFile={this.appendFile} removeFile={this.removeFile} /> )
-          }
-          <div className={css(styles.DropzoneButtons)} >
+          : 
+          } */}
+
+          <SortableList 
+            images={images}
+            axis={"xy"}
+            pressDelay={150}
+            blobs={this.state.blobs}
+            useDragHandle
+            saveBlob={this.saveBlob}
+            appendFile={this.appendFile}
+            removeFile={this.removeFile} 
+            onSortEnd={this.onSortEnd}
+            handleDrop={this.handleDrop}
+          />
+          {/* <div className={css(styles.DropzoneButtons)} >
             <DropzoneButton appendFile={this.appendFile}/>
             <button className={css(styles.button)} onClick={this.submitData}>
               {submitted ? "Return" : "Finished"}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     )
@@ -179,14 +149,12 @@ let styles = StyleSheet.create({
   DropzoneContainer: {
     display: "flex",
     flexDirection: "row",
+    width: '100%',
+    height: '100%',
     justifyContent: "space-between",
     flexWrap: "wrap",
     margin: "0",
-    padding: "20px 0px 20px 20px",
-    height: 400,
-    width: 700,
     overflow: "hidden",
-    boxShadow: 'rgba(129,148,167,0.39) 0px 0px 2px 0px',
     "::-webkit-scrollbar": { 
       display: "none"
     }
