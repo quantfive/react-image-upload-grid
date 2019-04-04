@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
 import {render} from 'react-dom'
+import {StyleSheet, css} from 'aphrodite'
+import DragNDrop from '../../src'
 
-import Example from '../../src'
-
-class Demo extends Component {
+class App extends Component {
   render() {
     return <div>
-      <h1>react-image-upload-grid Demo</h1>
-      <Example/>
+      <DragNDrop/>
     </div>
   }
 }
 
-render(<Demo/>, document.querySelector('#demo'))
+
+render(<App/>, document.querySelector('#demo'))
