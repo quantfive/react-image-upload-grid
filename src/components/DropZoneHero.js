@@ -72,9 +72,8 @@ export default class DropZoneHero extends Component {
    * @param { Object } acceptedFiles -- the files we've accepted
    */
   onDrop = (acceptedFiles) => {
-    this.props.appendFile(acceptedFiles);
 
-    acceptedFiles.forEach(file => {
+    acceptedFiles.forEach((file, index) => {
       const reader = new FileReader()
 
       reader.onabort = () => console.log('file reading was aborted')
@@ -82,8 +81,8 @@ export default class DropZoneHero extends Component {
       reader.onload = () => {
         // Do whatever you want with the file contents
         const blob = reader.result;
-  
         this.props.saveBlob(blob);
+        this.props.appendFile([file]);
       }
   
       reader.readAsDataURL(file)
@@ -100,11 +99,11 @@ export default class DropZoneHero extends Component {
         {({getRootProps, getInputProps}) => {
           return (
             <div 
-              className={css(styles.DropZoneHero) + ' ' + this.props.dropzoneClassName}
+              className={css(styles.DropZoneHero) + ' ' + this.props.addImageClassName}
               {...getRootProps()}
               >
               <input {...getInputProps()} />
-              { this.props.addText ? this.props.addText : <FontAwesomeIcon icon={faPlus} size={'2x'} /> }
+              { this.props.addImageText ? this.props.addImageText : <FontAwesomeIcon icon={faPlus} size={'2x'} /> }
             </div>
           )
         }}
@@ -132,7 +131,6 @@ let styles = StyleSheet.create({
     // boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     border: "2px dashed #ccc",
     ":hover": {
-      transform: "scale(1.03)",
       border: "2px dashed black",
     },
   },
@@ -142,16 +140,6 @@ let styles = StyleSheet.create({
     height: "auto",
     float: "left",
     overflow: "hidden"
-  },
-  DropZoneGrid: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    width: "100%",
-    height: 400,
-    overflowY: "scroll",
   },
   CloseButton: {
     position: "absolute",
@@ -171,7 +159,6 @@ let styles = StyleSheet.create({
     transition: "all 0.2s ease-in-out",
     opacity: 0.8,
     ":hover": {
-      transform: "scale(1.04)",
       opacity: 1
     }
   },

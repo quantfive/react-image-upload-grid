@@ -79,9 +79,6 @@ let styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
-    ":hover": {
-      transform: "scale(1.04)",
-    }
   },
   input: {
     display: "none"

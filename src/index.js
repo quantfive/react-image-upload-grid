@@ -5,10 +5,8 @@ import {StyleSheet, css} from 'aphrodite';
 import arrayMove from 'array-move';
 
 //Component
-import DropzoneButton from './components/DropZoneButton';
 import DropZoneHero from './components/DropZoneHero';
 import SortableList from './components/SortableList';
-import FinishedScreen from './components/FinishedScreen';
 
 export default class DragNDrop extends Component {
   constructor(props) {
@@ -42,10 +40,16 @@ export default class DragNDrop extends Component {
         newImages = [],
         files = Object.values(fileList);
 
-    for (var i = 0; i < files.length; i++) {
-      if (!cache[files[i].lastModified]) {
-        cache[files[i].lastModified] = true;
-        newImages.push(files[i])
+    if (this.props.noCache) {
+      newImages.push(files[i]);
+    } else {
+      for (var i = 0; i < files.length; i++) {
+        if (!cache[files[i].lastModified]) {
+          cache[files[i].lastModified] = true;
+          newImages.push(files[i]);
+        } else {
+          this.props.cacheCallback && this.props.cacheCallback();
+        }
       }
     }
     let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
@@ -87,6 +91,10 @@ export default class DragNDrop extends Component {
     this.setState(({images}) => ({
       images: arrayMove(images, oldIndex, newIndex),
     }));
+
+    this.setState(({blobs}) => ({
+      blobs: arrayMove(blobs, oldIndex, newIndex),
+    }));
   }
 
   /**
@@ -104,34 +112,35 @@ export default class DragNDrop extends Component {
   }
 
   render() {
-    let { images, submitted } = this.state;
+    let { images } = this.state;
 
     return (
       <div className={css(styles.Body)}>
-        <div className={css(styles.DropzoneContainer)} id="container">
-          {/* {submitted 
-          ? <FinishedScreen images={images} />
-          : 
-          } */}
-
-          <SortableList 
+        <div className={css(styles.DropzoneContainer)}>
+          {images.length > 0 &&
+            <SortableList 
+              images={images}
+              axis={"xy"}
+              blobs={this.state.blobs}
+              saveBlob={this.saveBlob}
+              imageClassName={this.props.imageClassName}
+              appendFile={this.appendFile}
+              removeFile={this.removeFile} 
+              onSortEnd={this.onSortEnd}
+              handleDrop={this.handleDrop}
+            />
+          }
+          <DropZoneHero 
             images={images}
-            axis={"xy"}
-            pressDelay={150}
+            id={0}
+            addImageClassName={this.props.addImageClassName}
             blobs={this.state.blobs}
-            useDragHandle
             saveBlob={this.saveBlob}
             appendFile={this.appendFile}
             removeFile={this.removeFile} 
             onSortEnd={this.onSortEnd}
             handleDrop={this.handleDrop}
-          />
-          {/* <div className={css(styles.DropzoneButtons)} >
-            <DropzoneButton appendFile={this.appendFile}/>
-            <button className={css(styles.button)} onClick={this.submitData}>
-              {submitted ? "Return" : "Finished"}
-            </button>
-          </div> */}
+        />
         </div>
       </div>
     )
@@ -151,7 +160,7 @@ let styles = StyleSheet.create({
     flexDirection: "row",
     width: '100%',
     height: '100%',
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flexWrap: "wrap",
     margin: "0",
     overflow: "hidden",
@@ -176,8 +185,5 @@ let styles = StyleSheet.create({
     boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     backgroundColor: "#4285f4", 
     userSelect: "none",
-    ":hover" : {
-      transform: "scale(1.03)"
-    }
   }
 });

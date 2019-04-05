@@ -8,7 +8,7 @@ const SortableItem = class SortableElement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      focusID: '',  //saves id from events to specify changes
+      hover: false,  //saves id from events to specify changes
       showDiv: false, //when true, shows button that allows user to remove image
     }
   }
@@ -29,7 +29,7 @@ const SortableItem = class SortableElement extends React.Component {
    */
   handleMouseOver = (e) => {
     this.setState({
-      focusID: e.target.id,
+      hover: true,
       showDiv: true
     })
   }
@@ -40,60 +40,36 @@ const SortableItem = class SortableElement extends React.Component {
    */
   handleMouseLeave = (e) => {
     this.setState({
-      focusId: '',
+      hover: false,
       showDiv: false
     })
   }
 
 
   render() {
-    let { src, id, many, handleDrop } = this.props;
+    let { src, id } = this.props;
     return (
-      // <Dropzone onDrop={this.onDrop} className={css(styles.DropZoneGrid)}>
-      //   {({getRootProps, getInputProps}) => {
-      //     return (
-      //       <li
-      //         className={`DropZone ${css(styles.DropZone)}`}
-      //         id={`dropzone${id}`}
-      //         draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-      //         onMouseEnter={this.handleMouseOver}
-      //         onMouseLeave={this.handleMouseLeave}
-      //         {...getRootProps()}
-      //         >
-      //         <input {...getInputProps()} />
-      //         <img 
-      //           draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-      //           className={css(styles.preview)} 
-      //           id={id}
-      //           src={src} 
-      //         />
-      //       {(id === Number(this.state.focusID) && this.state.showDiv)
-      //           ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
-      //               <p className={css(styles.ButtonText)}>-</p>
-      //             </span>)
-      //           : null }
-      //       </li>
-      //     )
-      //   }}
-      // </Dropzone>
-      <li
-        className={`DropZone ${css(styles.DropZone)}`}
+      <div
+        className={`DropZone ${css(styles.DropZone)} ${this.props.imageClassName}`}
         id={`dropzone${id}`}
         onMouseEnter={this.handleMouseOver}
         onMouseLeave={this.handleMouseLeave}
         >
-        <img 
-          draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-          className={css(styles.preview)} 
-          id={id}
-          src={src} 
-        />
-      {(id === Number(this.state.focusID) && this.state.showDiv)
-          ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
-              <p className={css(styles.ButtonText)}>-</p>
-            </span>)
-          : null }
-      </li>
+        <div className={css(styles.inner)}>
+          <img
+            draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
+            className={css(styles.preview)} 
+            id={id}
+            src={src} 
+          />
+          {this.state.hover
+            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
+                <p className={css(styles.ButtonText)}>-</p>
+              </span>)
+            : null 
+          }
+        </div>
+      </div>
     )
   }
 };
@@ -106,19 +82,16 @@ let styles = StyleSheet.create({
     justifyContent: "center",
     width: 180,
     height: 180,
-    overflow: "hidden",
     margin: 10,
-    color: "black",
+    boxSizing: 'border-box',
     lineHeight: 1.5,
     textAlign: "center",
     cursor: "pointer",
     borderRadius: 4,
     outline: 'none',
-    cursor: 'pointer',
-    border: '1px solid #ddd',
-    // boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
+    backgroundColor: '#fff',
+    border: '2px solid #ddd',
     ":hover": {
-      transform: "scale(1.03)",
       boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     }
   },
@@ -130,6 +103,11 @@ let styles = StyleSheet.create({
     maxWidth: "100%",
     float: "left",
     overflow: "hidden"
+  },
+  inner: {
+    position: 'relative',
+    height: '100%',
+    display: 'flex',
   },
   CloseButton: {
     position: "absolute",
@@ -149,7 +127,6 @@ let styles = StyleSheet.create({
     transition: "all 0.2s ease-in-out",
     opacity: 0.8,
     ":hover": {
-      transform: "scale(1.04)",
       opacity: 1
     }
   },

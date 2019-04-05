@@ -25,7 +25,6 @@ let styles = StyleSheet.create({
     cursor: "pointer",
     boxShadow: 'rgba(0,0,0,0.39) 0px 0px 2px 0px',
     ":hover": {
-      transform: "scale(1.03)",
       opacity: 0.6
     }
   },
