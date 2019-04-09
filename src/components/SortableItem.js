@@ -2,7 +2,6 @@
 import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
-import Dropzone from 'react-dropzone'
 
 const SortableItem = class SortableElement extends React.Component {
   constructor(props) {
@@ -16,11 +15,12 @@ const SortableItem = class SortableElement extends React.Component {
   /**
    * Deletes image
    * @param { Event } e -- the onClick event
-   * @param { String } uid -- unique id passed by IIFE triggered onClick
+   * @param { Integer } index -- index of the item we clicked on to remove
+   * @param { String } id -- the id of the item we want to delete
    */
-  handleClick = (e, uid) => {
+  handleClick = (e, index, id) => {
     e.stopPropagation();
-    this.props.removeFile(uid)
+    this.props.removeFile(index, id)
   }
 
   /**
@@ -47,7 +47,7 @@ const SortableItem = class SortableElement extends React.Component {
 
 
   render() {
-    let { src, id } = this.props;
+    let { src, id, index } = this.props;
     return (
       <div
         className={`DropZone ${css(styles.DropZone)} ${this.props.imageClassName}`}
@@ -63,7 +63,7 @@ const SortableItem = class SortableElement extends React.Component {
             src={src} 
           />
           {this.state.hover
-            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, id)}>
+            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, index, id)}>
                 <p className={css(styles.ButtonText)}>-</p>
               </span>)
             : null 

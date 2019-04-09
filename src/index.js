@@ -71,17 +71,16 @@ export default class DragNDrop extends Component {
   
   /**
    * Removes the images and removes the image's uid from the cache
-   * @param { String } uid-- unique identifier of image
+   * @param { String } index -- the index of the image we want to remove
    */
-  removeFile = (uid) => {
-    let cache = [ ...this.state.cache ];
+  removeFile = (index, uid) => {
+    let cache = { ...this.state.cache };
     let images = [ ...this.state.images ];
-    let removed = images.filter(file => {
-      return file.lastModified === Number(uid)
-    }) 
-    cache[Number(uid)] = false;
-    images.splice(images.indexOf(removed[0]), 1);
-    this.setState({ images, cache })
+    let blobs = [ ...this.state.blobs ];
+    cache[uid] = false;
+    images.splice(index, 1);
+    blobs.splice(index, 1);
+    this.setState({ images, cache, blobs })
   }
 
   /**
