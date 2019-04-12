@@ -14,7 +14,6 @@ export default class DragNDrop extends Component {
     this.state = {
       submitted: false, 
       cache: {},
-      images: [],
       blobs: {},
     }
   }
@@ -64,8 +63,7 @@ export default class DragNDrop extends Component {
       this.props.imageAddedCallback && this.props.imageAddedCallback(files)
     }
 
-    let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
-    this.setState({ images, cache, submitted: false })
+    this.setState({ cache })
   }
 
   /**
@@ -80,31 +78,27 @@ export default class DragNDrop extends Component {
       blobs,
     })
   }
-  
+
   /**
    * Removes the images and removes the image's uid from the cache
    * @param { String } index -- the index of the image we want to remove
    */
   removeFile = (index, uid) => {
     let cache = { ...this.state.cache };
-    let images = [ ...this.state.images ];
     cache[uid] = false;
-    images.splice(index, 1);
     this.props.removeImageCallback && this.props.removeImageCallback(index);
-    this.setState({ images, cache });
+    this.setState({ cache });
   }
 
   /**
    * Needed to allow react-sortable-hoc's dragndrop feature to work
    */
   onSortEnd = ({oldIndex, newIndex}) => {
-    this.setState(({images}) => ({
-      images: arrayMove(images, oldIndex, newIndex),
-    }));
+    this.props.onSortEnd({oldIndex, newIndex})
   }
 
   render() {
-    let { images } = this.state;
+    let { images } = this.props;
 
     return (
       <div className={css(styles.Body)}>
@@ -117,7 +111,7 @@ export default class DragNDrop extends Component {
               saveBlob={this.saveBlob}
               imageClassName={this.props.imageClassName}
               imageContainerClassName={this.props.imageContainerClassName}
-              removeFile={this.removeFile} 
+              removeFile={this.removeFile}
               onSortEnd={this.onSortEnd}
               handleDrop={this.handleDrop}
             />
