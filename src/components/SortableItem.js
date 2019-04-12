@@ -18,9 +18,9 @@ const SortableItem = class SortableElement extends React.Component {
    * @param { Integer } index -- index of the item we clicked on to remove
    * @param { String } id -- the id of the item we want to delete
    */
-  handleClick = (e, index, id) => {
+  removeImage = (e, index, id) => {
     e.stopPropagation();
-    this.props.removeFile(index, id)
+    this.props.removeFile(index, id);
   }
 
   /**
@@ -63,7 +63,7 @@ const SortableItem = class SortableElement extends React.Component {
             src={src} 
           />
           {this.state.hover
-            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.handleClick(e, index, id)}>
+            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.removeImage(e, index, id)}>
                 <p className={css(styles.ButtonText)}>-</p>
               </span>)
             : null 

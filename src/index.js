@@ -61,6 +61,7 @@ export default class DragNDrop extends Component {
     if (imagePushed) {
       this.props.imageAddedCallback && this.props.imageAddedCallback(files)
     }
+
     let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
     this.setState({ images, cache, submitted: false })
   }
@@ -89,7 +90,8 @@ export default class DragNDrop extends Component {
     cache[uid] = false;
     images.splice(index, 1);
     blobs.splice(index, 1);
-    this.setState({ images, cache, blobs })
+    this.props.removeImageCallback && this.props.removeImageCallback(index);
+    this.setState({ images, cache, blobs });
   }
 
   /**
