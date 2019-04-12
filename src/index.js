@@ -40,17 +40,26 @@ export default class DragNDrop extends Component {
         newImages = [],
         files = Object.values(fileList);
 
+    let imagePushed = false;
     if (this.props.noCache) {
-      newImages.push(files[i]);
+      for (var i = 0; i < files.length; i++) {
+        newImages.push(files[i]);
+      }
+      imagePushed = true;
     } else {
       for (var i = 0; i < files.length; i++) {
         if (!cache[files[i].lastModified]) {
           cache[files[i].lastModified] = true;
           newImages.push(files[i]);
+          imagePushed = true;
         } else {
           this.props.cacheCallback && this.props.cacheCallback();
         }
       }
+    }
+
+    if (imagePushed) {
+      this.props.imageAddedCallback && this.props.imageAddedCallback(files)
     }
     let images = this.state.images.length ? [...this.state.images, ...newImages ] : newImages;
     this.setState({ images, cache, submitted: false })
@@ -96,20 +105,6 @@ export default class DragNDrop extends Component {
     }));
   }
 
-  /**
-   * Submits Data through a post request and changes the app's submitted state
-   * @param { Event } e -- event triggered by onClick
-   */
-  submitData = async (e) => {
-    this.setState({ submitted: !this.state.submitted });
-
-    await this.props.submitData && this.props.submitData();
-
-    this.setState({
-      submitted: true,
-    });
-  }
-
   render() {
     let { images } = this.state;
 
@@ -123,6 +118,7 @@ export default class DragNDrop extends Component {
               blobs={this.state.blobs}
               saveBlob={this.saveBlob}
               imageClassName={this.props.imageClassName}
+              imageContainerClassName={this.props.imageContainerClassName}
               appendFile={this.appendFile}
               removeFile={this.removeFile} 
               onSortEnd={this.onSortEnd}

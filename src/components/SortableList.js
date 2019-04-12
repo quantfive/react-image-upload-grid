@@ -2,13 +2,11 @@
 import React from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
-import arrayMove from 'array-move';
 
 // Component
 import SortableItem from './SortableItem';
-import DropZoneHero from './DropZoneHero';
 
-const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs, imageClassName }) => {
+const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs, imageClassName, imageContainerClassName }) => {
   return (
     <div className={css(styles.DropZoneGrid)}>
       {images.length && images.map((image, i) => {
@@ -22,6 +20,7 @@ const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs,
             id={lastModified}
             key={lastModified}
             src={src}
+            imageContainerClassName={imageContainerClassName}
             imageClassName={imageClassName}
             handleDrop={handleDrop}
             removeFile={removeFile}

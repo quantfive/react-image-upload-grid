@@ -50,7 +50,7 @@ const SortableItem = class SortableElement extends React.Component {
     let { src, id, index } = this.props;
     return (
       <div
-        className={`DropZone ${css(styles.DropZone)} ${this.props.imageClassName}`}
+        className={`DropZone ${css(styles.DropZone)} ${this.props.imageContainerClassName}`}
         id={`dropzone${id}`}
         onMouseEnter={this.handleMouseOver}
         onMouseLeave={this.handleMouseLeave}
