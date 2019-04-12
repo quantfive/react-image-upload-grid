@@ -72,20 +72,11 @@ export default class DropZoneHero extends Component {
    * @param { Object } acceptedFiles -- the files we've accepted
    */
   onDrop = (acceptedFiles) => {
-
+    this.props.appendFile(acceptedFiles);
     acceptedFiles.forEach((file, index) => {
-      const reader = new FileReader()
-
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        const blob = reader.result;
-        this.props.saveBlob(blob);
-        this.props.appendFile([file]);
-      }
-  
-      reader.readAsDataURL(file)
+      let blob = URL.createObjectURL(file);
+      let uid = file.name + file.lastModified;
+      this.props.saveBlob({uid, blob});
     })
   }
 

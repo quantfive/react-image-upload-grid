@@ -15,7 +15,7 @@ export default class DragNDrop extends Component {
       submitted: false, 
       cache: {},
       images: [],
-      blobs: [],
+      blobs: {},
     }
   }
 
@@ -48,9 +48,11 @@ export default class DragNDrop extends Component {
       imagePushed = true;
     } else {
       for (var i = 0; i < files.length; i++) {
-        if (!cache[files[i].lastModified]) {
-          cache[files[i].lastModified] = true;
-          newImages.push(files[i]);
+        let file = files[i];
+        let uid = file.name + file.lastModified;
+        if (!cache[uid]) {
+          cache[uid] = true;
+          newImages.push(file);
           imagePushed = true;
         } else {
           this.props.cacheCallback && this.props.cacheCallback();
@@ -68,12 +70,12 @@ export default class DragNDrop extends Component {
 
   /**
    * Saves the blob to the state so we can access it later
+   * @param { Object } uid -- the UID of the blob we want to save
    * @param { Object } blob -- the blob we wish to save to state
    */
-  saveBlob = (blob) => {
-    let blobs = [...this.state.blobs];
-    blobs.push(blob);
-
+  saveBlob = ({uid, blob}) => {
+    let blobs = {...this.state.blobs};
+    blobs[uid] = blob;
     this.setState({
       blobs,
     })
@@ -86,12 +88,10 @@ export default class DragNDrop extends Component {
   removeFile = (index, uid) => {
     let cache = { ...this.state.cache };
     let images = [ ...this.state.images ];
-    let blobs = [ ...this.state.blobs ];
     cache[uid] = false;
     images.splice(index, 1);
-    blobs.splice(index, 1);
     this.props.removeImageCallback && this.props.removeImageCallback(index);
-    this.setState({ images, cache, blobs });
+    this.setState({ images, cache });
   }
 
   /**
@@ -100,10 +100,6 @@ export default class DragNDrop extends Component {
   onSortEnd = ({oldIndex, newIndex}) => {
     this.setState(({images}) => ({
       images: arrayMove(images, oldIndex, newIndex),
-    }));
-
-    this.setState(({blobs}) => ({
-      blobs: arrayMove(blobs, oldIndex, newIndex),
     }));
   }
 
@@ -121,7 +117,6 @@ export default class DragNDrop extends Component {
               saveBlob={this.saveBlob}
               imageClassName={this.props.imageClassName}
               imageContainerClassName={this.props.imageContainerClassName}
-              appendFile={this.appendFile}
               removeFile={this.removeFile} 
               onSortEnd={this.onSortEnd}
               handleDrop={this.handleDrop}

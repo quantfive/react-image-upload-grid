@@ -11,13 +11,14 @@ const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs,
     <div className={css(styles.DropZoneGrid)}>
       {images.length && images.map((image, i) => {
         let { lastModified } = image; // uses this as a unique key and id
-        let src = blobs[i]; // creates src from image data 
+        let uid = image.name + image.lastModified;
+        let src = blobs[uid]; // creates src from image data 
         let many = images.length > 2 ? true : false; // determines the css (size) of dropzones
         return (
           <SortableItem 
             index={i}
             image={image}
-            id={lastModified}
+            id={uid}
             key={lastModified}
             src={src}
             imageContainerClassName={imageContainerClassName}
