@@ -94,7 +94,9 @@ export default class DragNDrop extends Component {
    * Needed to allow react-sortable-hoc's dragndrop feature to work
    */
   onSortEnd = ({oldIndex, newIndex}) => {
-    this.props.onSortEnd({oldIndex, newIndex})
+    let images = [...this.props.images];
+    images = arrayMove(images, oldIndex, newIndex);
+    this.props.onSortEnd && this.props.onSortEnd(images)
   }
 
   render() {
