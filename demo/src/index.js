@@ -18,6 +18,12 @@ class App extends Component {
       images,
     })
   }
+  
+  removeImageCallback = index => {
+    let images = [...this.state.images];
+    images.splice(index, 1);
+    this.setState({ images })
+  }
 
   onSortEnd = (images) => {
     this.setState({
@@ -31,6 +37,7 @@ class App extends Component {
         <DragNDrop
           images={this.state.images}
           imageAddedCallback={this.imageAddedCallback}
+          removeImageCallback={this.removeImageCallback}
           onSortEnd={this.onSortEnd}
         />
       </div>
