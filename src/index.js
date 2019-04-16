@@ -17,7 +17,7 @@ export default class DragNDrop extends Component {
       blobs: {},
     }
   }
-
+ 
   /**
    * Handles localized image drops, function passed to children
    * @param { Event } e -- event triggered from onDrop on children
