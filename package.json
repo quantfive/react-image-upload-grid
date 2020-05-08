@@ -1,6 +1,6 @@
 {
   "name": "@quantfive/react-image-upload-grid",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "react-image-upload-grid React component",
   "main": "lib/index.js",
   "module": "es/index.js",
