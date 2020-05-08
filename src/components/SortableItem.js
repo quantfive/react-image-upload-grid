@@ -2,6 +2,7 @@
 import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
+import '../stylesheets/sortableItem.css';
 
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -77,7 +78,7 @@ const SortableItem = class SortableElement extends React.Component {
               <FontAwesomeIcon icon={faFileAlt} />
              </span>
             <div className={css(styles.metaContainer)}>
-              <div className={css(styles.pdfName)}>{(image && image.name) && image.name}</div>
+              <div className={`${css(styles.pdfName)} meta`}>{(image && image.name) && image.name}</div>
               <div className={css(styles.pdfSize)}>{(image && image.size) && this.formatBytes(image.size)}</div>
             </div>
             {this.state.hover
@@ -188,7 +189,10 @@ let styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '100%',
+    padding: '0px 10px',
+    boxSizing: 'border-box'
   },
   file: {
     fontSize: 40,
