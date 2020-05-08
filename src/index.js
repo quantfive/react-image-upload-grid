@@ -113,6 +113,7 @@ export default class DragNDrop extends Component {
               saveBlob={this.saveBlob}
               imageClassName={this.props.imageClassName}
               imageContainerClassName={this.props.imageContainerClassName}
+              appendFile={this.appendFile}
               removeFile={this.removeFile}
               onSortEnd={this.onSortEnd}
               handleDrop={this.handleDrop}

@@ -63,7 +63,6 @@ const SortableItem = class SortableElement extends React.Component {
 
   render() {
     let { src, id, index, isPdf, image } = this.props;
-    console.log('image', image);
     if (isPdf) {
       return (  
         <div
