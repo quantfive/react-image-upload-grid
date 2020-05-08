@@ -3,6 +3,9 @@ import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
 
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 const SortableItem = class SortableElement extends React.Component {
   constructor(props) {
     super(props);
@@ -45,32 +48,72 @@ const SortableItem = class SortableElement extends React.Component {
     })
   }
 
+  formatBytes = (bytes, decimals = 2) => {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
 
   render() {
-    let { src, id, index } = this.props;
-    return (
-      <div
-        className={`DropZone ${css(styles.DropZone)} ${this.props.imageContainerClassName}`}
-        id={`dropzone${id}`}
-        onMouseEnter={this.handleMouseOver}
-        onMouseLeave={this.handleMouseLeave}
+    let { src, id, index, isPdf, image } = this.props;
+    console.log('image', image);
+    if (isPdf) {
+      return (  
+        <div
+          className={`DropZone ${css(styles.DropZone)} ${this.props.imageContainerClassName}`}
+          id={`dropzone${id}`}
+          onMouseEnter={this.handleMouseOver}
+          onMouseLeave={this.handleMouseLeave}
         >
-        <div className={css(styles.inner)}>
-          <img
-            draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
-            className={css(styles.preview)} 
-            id={id}
-            src={src} 
-          />
-          {this.state.hover
-            ? (<span className={css(styles.CloseButton)} onClick={(e) => this.removeImage(e, index, id)}>
-                <p className={css(styles.ButtonText)}>-</p>
-              </span>)
-            : null 
-          }
+           <div className={css(styles.inner, styles.pdfInner)}>
+            <span className={css(styles.file)}>
+              <FontAwesomeIcon icon={faFileAlt} />
+             </span>
+            <div className={css(styles.metaContainer)}>
+              <div className={css(styles.pdfName)}>{(image && image.name) && image.name}</div>
+              <div className={css(styles.pdfSize)}>{(image && image.size) && this.formatBytes(image.size)}</div>
+            </div>
+            {this.state.hover
+              ? (<span className={css(styles.CloseButton)} onClick={(e) => this.removeImage(e, index, id)}>
+                  <p className={css(styles.ButtonText)}>-</p>
+                </span>)
+              : null 
+            }
+          </div>
         </div>
-      </div>
-    )
+      )
+    } else {
+      return (
+        <div
+          className={`DropZone ${css(styles.DropZone)} ${this.props.imageContainerClassName}`}
+          id={`dropzone${id}`}
+          onMouseEnter={this.handleMouseOver}
+          onMouseLeave={this.handleMouseLeave}
+          >
+          <div className={css(styles.inner)}>
+            <img
+              draggable="false" //prevents user from dragging, else messes up 'react-sortable-hoc' 
+              className={css(styles.preview)} 
+              id={id}
+              src={src} 
+            />
+            {this.state.hover
+              ? (<span className={css(styles.CloseButton)} onClick={(e) => this.removeImage(e, index, id)}>
+                  <p className={css(styles.ButtonText)}>-</p>
+                </span>)
+              : null 
+            }
+          </div>
+        </div>
+      )
+    }
   }
 };
 
@@ -110,6 +153,12 @@ let styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
   },
+  pdfInner: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },  
   CloseButton: {
     position: "absolute",
     display: "flex",
@@ -134,6 +183,23 @@ let styles = StyleSheet.create({
   ButtonText: {
     margin: 0,
     paddingBottom: 2
+  },
+  metaContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  file: {
+    fontSize: 40,
+    color: '#C0C0C0',
+  },
+  pdfName: {
+    fontSize: 15,
+    fontWeight: 500
+  },
+  pdfSize: {
+    fontSize: 13
   }
 });
 

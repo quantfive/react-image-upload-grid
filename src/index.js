@@ -17,7 +17,7 @@ export default class DragNDrop extends Component {
       blobs: {},
     }
   }
- 
+
   /**
    * Handles localized image drops, function passed to children
    * @param { Event } e -- event triggered from onDrop on children
@@ -87,7 +87,7 @@ export default class DragNDrop extends Component {
     let cache = { ...this.state.cache };
     cache[uid] = false;
     this.props.removeImageCallback && this.props.removeImageCallback(index);
-    // this.setState({ cache });
+    this.setState({ cache });
   }
 
   /**

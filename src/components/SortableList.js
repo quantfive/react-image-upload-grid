@@ -12,10 +12,11 @@ const SortableList = SortableContainer((props) => {
   return (
     <div className={css(styles.DropZoneGrid)}>
       {images.length && images.map((image, i) => {
-        let { name, lastModified } = image; // uses this as a unique key and id
+        let { name, lastModified, type } = image; // uses this as a unique key and id
         let uid = name && lastModified ? name + lastModified : image.id;
         let src = blobs[uid] ? blobs[uid] : image.url; // creates src from image data 
         let many = images.length > 2 ? true : false; // determines the css (size) of dropzones
+
         return (
           <SortableItem 
             index={i}
@@ -28,6 +29,7 @@ const SortableList = SortableContainer((props) => {
             handleDrop={handleDrop}
             removeFile={removeFile}
             many={many}
+            isPdf={type === 'application/pdf'}
           />
         )
       })}
