@@ -59,6 +59,7 @@ let styles = StyleSheet.create({
     flexWrap: "wrap",
     background: "rbga(248,248,248,0.8)",
     overflowY: "scroll",
+    width: '100%',
     ":-webkit-scrollbar": { 
       display: "none",
       width: 0
