@@ -5,8 +5,10 @@ import { StyleSheet, css } from 'aphrodite';
 
 // Component
 import SortableItem from './SortableItem';
+import DropZoneHero from './DropZoneHero';
 
-const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs, imageClassName, imageContainerClassName }) => {
+const SortableList = SortableContainer((props) => {
+  const { images, handleDrop, removeFile, blobs, imageClassName, imageContainerClassName } = props;
   return (
     <div className={css(styles.DropZoneGrid)}>
       {images.length && images.map((image, i) => {
@@ -29,6 +31,18 @@ const SortableList = SortableContainer(({ images, handleDrop, removeFile, blobs,
           />
         )
       })}
+      <DropZoneHero
+        images={images}
+        id={0}
+        addImageClassName={props.addImageClassName}
+        blobs={props.blobs}
+        saveBlob={props.saveBlob}
+        appendFile={props.appendFile}
+        removeFile={props.removeFile} 
+        onSortEnd={props.onSortEnd}
+        handleDrop={props.handleDrop}
+        addImageText={props.addImageText}
+      />
     </div>
   )
 })
@@ -37,7 +51,7 @@ let styles = StyleSheet.create({
   DropZoneGrid: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     flexWrap: "wrap",
     background: "rbga(248,248,248,0.8)",

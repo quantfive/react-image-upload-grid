@@ -105,7 +105,7 @@ export default class DragNDrop extends Component {
     return (
       <div className={css(styles.Body)}>
         <div className={css(styles.DropzoneContainer)}>
-          {images.length > 0 &&
+          {images.length > 0 ? (
             <SortableList 
               images={images}
               axis={"xy"}
@@ -116,20 +116,23 @@ export default class DragNDrop extends Component {
               removeFile={this.removeFile}
               onSortEnd={this.onSortEnd}
               handleDrop={this.handleDrop}
+              addImageClassName={this.props.addImageClassName}
+              addImageText={this.props.addImageText}
             />
-          }
-          <DropZoneHero 
-            images={images}
-            id={0}
-            addImageClassName={this.props.addImageClassName}
-            blobs={this.state.blobs}
-            saveBlob={this.saveBlob}
-            appendFile={this.appendFile}
-            removeFile={this.removeFile} 
-            onSortEnd={this.onSortEnd}
-            handleDrop={this.handleDrop}
-            addImageText={this.props.addImageText}
-        />
+          ) : (
+            <DropZoneHero 
+              images={images}
+              id={0}
+              addImageClassName={this.props.addImageClassName}
+              blobs={this.state.blobs}
+              saveBlob={this.saveBlob}
+              appendFile={this.appendFile}
+              removeFile={this.removeFile} 
+              onSortEnd={this.onSortEnd}
+              handleDrop={this.handleDrop}
+              addImageText={this.props.addImageText}
+            />
+          )}
         </div>
       </div>
     )
