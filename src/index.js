@@ -87,7 +87,7 @@ export default class DragNDrop extends Component {
     let cache = { ...this.state.cache };
     cache[uid] = false;
     this.props.removeImageCallback && this.props.removeImageCallback(index);
-    this.setState({ cache });
+    // this.setState({ cache });
   }
 
   /**
@@ -128,6 +128,7 @@ export default class DragNDrop extends Component {
             removeFile={this.removeFile} 
             onSortEnd={this.onSortEnd}
             handleDrop={this.handleDrop}
+            addImageText={this.props.addImageText}
         />
         </div>
       </div>
@@ -148,7 +149,6 @@ let styles = StyleSheet.create({
     flexDirection: "row",
     width: '100%',
     height: '100%',
-    // justifyContent: "space-between",
     flexWrap: "wrap",
     margin: "0",
     overflow: "hidden",

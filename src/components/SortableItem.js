@@ -89,6 +89,7 @@ let styles = StyleSheet.create({
     cursor: "pointer",
     borderRadius: 4,
     outline: 'none',
+    zIndex: 3,
     backgroundColor: '#fff',
     border: '2px solid #ddd',
     ":hover": {

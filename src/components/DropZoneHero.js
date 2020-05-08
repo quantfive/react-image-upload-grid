@@ -119,7 +119,6 @@ let styles = StyleSheet.create({
     textAlign: "center",
     alignItems: 'center',
     cursor: "pointer",
-    // boxShadow: 'rgba(129,148,167,0.39) 0px 3px 10px 0px',
     border: "2px dashed #ccc",
     ":hover": {
       border: "2px dashed black",
