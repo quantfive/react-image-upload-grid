@@ -93,7 +93,7 @@ export default class DropZoneHero extends Component {
               className={css(styles.DropZoneHero) + ' ' + this.props.addImageClassName}
               {...getRootProps()}
               >
-              <input {...getInputProps()} />
+              <input {...getInputProps()} fileAccept={this.props.fileAccept} />
               { this.props.addImageText ? this.props.addImageText : <FontAwesomeIcon icon={faPlus} size={'2x'} /> }
             </div>
           )

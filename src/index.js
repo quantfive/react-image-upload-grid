@@ -118,6 +118,7 @@ export default class DragNDrop extends Component {
               handleDrop={this.handleDrop}
               addImageClassName={this.props.addImageClassName}
               addImageText={this.props.addImageText}
+              fileAccept={this.props.fileAccept}
             />
           ) : (
             <DropZoneHero 
@@ -130,6 +131,7 @@ export default class DragNDrop extends Component {
               removeFile={this.removeFile} 
               onSortEnd={this.onSortEnd}
               handleDrop={this.handleDrop}
+              fileAccept={this.props.fileAccept}
               addImageText={this.props.addImageText}
             />
           )}

@@ -42,6 +42,7 @@ const SortableList = SortableContainer((props) => {
         onSortEnd={props.onSortEnd}
         handleDrop={props.handleDrop}
         addImageText={props.addImageText}
+        fileAccept={props.fileAccept}
       />
     </div>
   )
