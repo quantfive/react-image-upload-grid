@@ -18,6 +18,14 @@ export default class DragNDrop extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) { 
+    if (prevProps !== this.props) {
+      if (this.props.images && this.props.images.length === 0) {
+        this.setState({ cache: {} })
+      }
+    }
+  }
+
   /**
    * Handles localized image drops, function passed to children
    * @param { Event } e -- event triggered from onDrop on children
