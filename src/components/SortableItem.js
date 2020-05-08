@@ -2,7 +2,6 @@
 import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
-import '../stylesheets/sortableItem.css';
 
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
