@@ -54,7 +54,7 @@ let styles = StyleSheet.create({
   DropZoneGrid: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
     background: "rbga(248,248,248,0.8)",
