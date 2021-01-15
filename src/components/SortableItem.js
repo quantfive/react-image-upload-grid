@@ -3,7 +3,7 @@ import React from 'react';
 import { SortableElement } from 'react-sortable-hoc';
 import { StyleSheet, css } from 'aphrodite';
 
-import { faFileAlt } from '@fortawesome/free-solid-svg-icons'
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons/faFileAlt'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const SortableItem = class SortableElement extends React.Component {

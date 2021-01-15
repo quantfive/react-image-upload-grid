@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // NPM Modules
 import { StyleSheet, css } from 'aphrodite';
 import Dropzone from 'react-dropzone'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class DropZoneHero extends Component {
